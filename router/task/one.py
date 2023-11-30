@@ -7,5 +7,6 @@ router = APIRouter(prefix="/task",
 
 @router.get("/one")
 async def read_users():
+    print("知乎")
     return [{"username": "g"}, {"username": "?"}]
 
