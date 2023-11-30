@@ -9,5 +9,6 @@ router = APIRouter(prefix="/task",
 async def read_users():
     print("as")
     print("cs")
+    print("ds")
     return [{"username": "g"}, {"username": "?"}]
 
