@@ -10,5 +10,6 @@ async def read_users():
     print("as")
     print("cs")
     print("ds")
+    print("网易")
     return [{"username": "g"}, {"username": "?"}]
 
