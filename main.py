@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette.responses import JSONResponse
-from router.users import user
-from router.task import one
+from api.users import user
+from api.task import one
 
 
 # 异常处理
