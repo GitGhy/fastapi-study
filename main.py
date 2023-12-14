@@ -1,24 +1,54 @@
+import traceback
 from fastapi import FastAPI
 from starlette.responses import JSONResponse
+from fastapi.routing import RequestValidationError
 from api.users import user
 from api.task import one
+from fastapi.middleware.cors import CORSMiddleware
 
-
-# 异常处理
-async def exception_not_found(request, exc):
-    return JSONResponse({
-        "code": exc.status_code,
-        "error": exc.detail,
-    }, status_code=exc.status_code)
-
-
-exception_handlers = {
-    404: exception_not_found,
-}
 app = FastAPI(title="FastAPI",
               description="FastAPI文档",
-              version="0.0.1",
-              exception_handlers=exception_handlers)
+              version="0.0.1")
+
+# 添加 CORS 中间件以允许跨域请求
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.exception_handler(Exception)
+async def exception_handler(request, exc):
+    response = {
+        'code': exc.status_code if hasattr(exc, 'status_code') else 500,
+        'success': False,
+        'method': request.method,
+        'path': request.url.path,
+        'error': '服务器内部错误',
+        'error_type': exc.__class__.__name__,
+        'traceback': traceback.format_exc().splitlines(),
+        'exc_info': exc.errors(),
+    }
+    return JSONResponse(content=response, status_code=500)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    response = {
+        'code': exc.status_code if hasattr(exc, 'status_code') else 400,
+        'success': False,
+        'method': request.method,
+        'path': request.url.path,
+        'error': '请求参数验证失败',
+        'error_type': exc.__class__.__name__,
+        'traceback': traceback.format_exc().splitlines(),
+        'exc_info': exc.errors()
+    }
+    return JSONResponse(content=response, status_code=400)
+
+
 app.include_router(user.router)
 app.include_router(one.router)
 
@@ -29,7 +59,7 @@ async def root():
 
 
 @app.get("/hello/{name}", tags=['app实例对象注册接口'])
-async def say_hello(name: str):
+async def say_hello(name: int):
     return {"message": f"Hello {name}"}
 
 
