@@ -13,3 +13,7 @@ async def read_users():
     print("知乎")
     return [{"username": "g"}, {"username": "?"}]
 
+
+@router.post("/two")
+async def read_users():
+    return {"method": "post"}

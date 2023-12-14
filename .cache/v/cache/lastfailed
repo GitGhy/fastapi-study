@@ -1,0 +1,4 @@
+{
+  "test/test_square.py::test_greater": true,
+  "test/test_square.py::test_square": true
+}
