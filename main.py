@@ -1,11 +1,11 @@
-import traceback
-from fastapi import FastAPI, HTTPException
-from starlette.responses import JSONResponse
 from fastapi.routing import RequestValidationError
-from api.users import user
-from api.task import one
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from starlette.responses import JSONResponse
+from fastapi import FastAPI, HTTPException
+from api.users import user
+from api.task import one
+import traceback
 
 app = FastAPI(title="FastAPI",
               description="FastAPI文档",
@@ -74,9 +74,3 @@ async def say_hello(name: int | str):
             "code": 400,
         })
     return {"message": f"Hello {name}"}
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app='main:app', host="0.0.0.0", port=8000, reload=True)
