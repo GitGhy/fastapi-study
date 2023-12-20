@@ -1,16 +1,1 @@
-1. 对alembic进行初始化。
-alembic init alembic
-
-2. alembic.ini文件修改 -> sqlalchemy.url
-sqlalchemy.url = mysql+pymysql://root:123123@localhost:3306/online_learn?charset=utf8
-
-3. 修改alembic>env.py文件 -> 21行 target_metadata = None
-示例:
-from database.user_db.models import Base as userBase
-target_metadata = [userBase.metadata]
-
-4.创建迁移脚本
-alembic revision --autogenerate -m "填写更新的信息"
-
-5.更新数据库
-alembic upgrade head
+Generic single-database configuration.
