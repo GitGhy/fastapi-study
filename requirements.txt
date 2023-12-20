@@ -6,3 +6,8 @@ httpx==0.23.0
 pyjwt==2.4.0
 pytz==2023.3.post1
 requests==2.31.0
+sqlalchemy==2.0.23
+pydantic==1.10.12
+aiomysql==0.2.0
+greenlet==3.0.2
+alembic==1.13.0
