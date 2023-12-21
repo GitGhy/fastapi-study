@@ -3,9 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from starlette.responses import JSONResponse
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseSettings
 from api.users import user
 from api.task import one
 import traceback
+
+
+class Settings(BaseSettings):
+    orm_mode: bool = True
+
+
+settings = Settings()
 
 app = FastAPI(title="FastAPI",
               description="FastAPI文档",

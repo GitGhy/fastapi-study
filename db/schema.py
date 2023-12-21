@@ -7,5 +7,10 @@ class UserModelSchema(BaseModel):
     account: str
     password: str
 
-    class Config:
-        orm_mode = True
+
+class UserLoginSchema(BaseModel):
+    """
+    User Login Schema
+    """
+    account: str
+    password: str

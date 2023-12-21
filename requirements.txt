@@ -11,3 +11,4 @@ pydantic==1.10.12
 aiomysql==0.2.0
 greenlet==3.0.2
 alembic==1.13.0
+werkzeug==2.2.3
