@@ -1,65 +1,57 @@
+from fastapi import HTTPException
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from schema import UserModelSchema
-from models import UserModel
+from sqlalchemy.exc import IntegrityError
+from .schema import UserModelSchema
+from .models import UserModel
 
 
 class UserModelCrud:
     # 创建用户
     @staticmethod
     async def create_user(db: AsyncSession, user: UserModelSchema):
-        # 使用异步事务进行操作
-        async with db.begin():
-            #  创建用户模型对象
-            db_user = UserModel(**user.dict())
-            # 将用户对象添加到数据库会话
-            db.add(db_user)
-            # 提交事务
-            await db.flush()
-            # 刷新数据库
-            await db.refresh(db_user)
-        return db_user
+        try:
+            # 使用异步事务进行操作
+            async with db.begin():
+                print("hh", user.dict())
+                user_info = user.dict()
+                print(user_info['account'])
+                select_user, msg = await UserModelCrud.get_user(db=db, user_account=user_info['account'])
+                print(select_user)
+                if select_user:
+                    raise HTTPException(status_code=400, detail={"code": 401,
+                                                                 "success": False,
+                                                                 "msg": "用户已存在"})
+                #  创建用户模型对象
+                db_user = UserModel(account=user_info['account'], password=user_info['password'],
+                                    name=user_info['name'], age=user_info['age'])
+                # 将用户对象添加到数据库会话
+                db.add(db_user)
+                # 提交事务
+            await db.commit()
+            return True, {"code": 200,
+                          "success": False,
+                          "msg": "用户创建成功"}
+        except IntegrityError:
+            return False, {"code": 500,
+                           "success": False,
+                           "msg": "服务器错误"}
 
     # 获取单个用户
     @staticmethod
-    async def get_user(db: AsyncSession, user_id: int):
+    async def get_user(user_account: str, db: AsyncSession):
+        print(user_account)
         # 使用异步 SQL 查询语句
-        statement = select(UserModel).where(UserModel.id == user_id)
+        select_user = select(UserModel).where(UserModel.account == user_account)
+        select_user = await db.execute(select_user)
         # 执行查询并返回结果
-        result = await db.execute(statement)
-        return result.scalar_one_or_none()
-
-    # 获取多个用户
-    @staticmethod
-    async def get_users(db: AsyncSession, skip: int = 0, limit: int = 10):
-        # 使用异步 SQL 查询语句
-        statement = select(UserModel).offset(skip).limit(limit)
-        # 执行查询并返回所有结果
-        result = await db.execute(statement)
-        return result.scalars().all()
-
-    # 更新用户信息
-    @staticmethod
-    async def update_user(db: AsyncSession, user_id: int, new_user: UserModel):
-        # 获取要更新的用户
-        user_to_update = await UserModelCrud.get_user(db, user_id)
-        # 如果找到要更新的用户，则更新其属性
-        if user_to_update:
-            for key, value in new_user.dict().items():
-                setattr(user_to_update, key, value)
-            # 使用异步事务提交更改
-            await db.flush()
-        return user_to_update
-
-    # 删除用户
-    @staticmethod
-    async def delete_user(db: AsyncSession, user_id: int):
-        # 获取要删除的用户
-        user_to_delete = await UserModelCrud.get_user(db, user_id)
-        # 如果找到要删除的用户，则执行删除操作
-        if user_to_delete:
-            async with db.begin():
-                await db.delete(user_to_delete)
-                # 使用异步事务提交更改
-                await db.flush()
-        return {"message": "用户删除成功"}
+        result = select_user.scalar()
+        if result:
+            user_info = {
+                'account': result.account,
+                'password': result.password,
+                'name': result.name,
+                'age': result.age,
+            }
+            return True, user_info
+        return False, {}

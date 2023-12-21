@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-
-Base = declarative_base()
+from db.database import Base
 
 
 # unique=True, 唯一，nullable=True可空
@@ -16,5 +14,3 @@ class UserModel(Base):
     account = Column(String(50), unique=True, nullable=False)
     password = Column(String(500), nullable=False)
     join_time = Column(DateTime, default=datetime.now)
-
-
