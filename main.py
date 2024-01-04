@@ -73,12 +73,3 @@ app.include_router(one.router)
 @app.get("/", tags=['Hello World'])
 async def root():
     return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}", tags=['app实例对象注册接口'])
-async def say_hello(name: int | str):
-    if type(name) == str:
-        raise HTTPException(status_code=400, detail={
-            "code": 400,
-        })
-    return {"message": f"Hello {name}"}

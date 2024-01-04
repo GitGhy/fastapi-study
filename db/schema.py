@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 
+# 数据验证模型
 class UserModelSchema(BaseModel):
     name: str
     age: int
