@@ -40,7 +40,7 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-# 在连接上运行迁移的函数
+# 在线运行迁移的函数
 def do_run_migrations(connection):
     context.configure(connection=connection, target_metadata=target_metadata)
 

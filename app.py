@@ -26,8 +26,7 @@ def local_ip():
             s.connect(('8.8.8.8', 80))
             ip = s.getsockname()[0]
 
-        server_info = f"INFO:     Uvicorn running on http://{ip}:8000 (Press CTRL+C to quit)"
-        print(server_info)
+        server_info = f"INFO:     Uvicorn running on http://{ip}:8000 (Press CTRL+C to quit 局域网IP)"
         return server_info
     except Exception as e:
         print(f"无法获取IP: {e}")
@@ -35,6 +34,6 @@ def local_ip():
 
 
 if __name__ == "__main__":
-    # app = local_ip()
-    print(f"INFO:     Uvicorn running on http://192.168.1.102:8000 (Press CTRL+C to quit)")
+    app = local_ip()
+    print(app)
     uvicorn.run(app='main:app', host="0.0.0.0", port=8000, reload=True)
