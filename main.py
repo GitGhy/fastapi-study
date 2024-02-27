@@ -5,7 +5,6 @@ from starlette.responses import JSONResponse
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseSettings
 from api.users import user
-from api.task import one
 import traceback
 
 
@@ -67,7 +66,6 @@ async def validation_exception_handler(request, exc):
 
 
 app.include_router(user.router)
-app.include_router(one.router)
 
 
 @app.get("/", tags=['Hello World'])
