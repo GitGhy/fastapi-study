@@ -7,8 +7,8 @@ pyjwt==2.4.0
 pytz==2023.3.post1
 requests==2.31.0
 sqlalchemy==2.0.23
-pydantic==1.10.12
+pydantic==2.6.2
 aiomysql==0.2.0
 greenlet==3.0.2
 alembic==1.13.0
-werkzeug==2.2.3
+werkzeug==3.0.1
