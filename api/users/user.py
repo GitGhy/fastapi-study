@@ -6,6 +6,7 @@ from utils.jwt_token import JWTToken
 from db.crud import UserModelCrud
 from db.database import get_db
 
+# 创建API路由实例
 router = APIRouter(
     prefix="/user",
     tags=["user"],
@@ -13,13 +14,14 @@ router = APIRouter(
 )
 
 
-@router.post("/register", tags=["注册"])
+@router.post("/register", tags=["用户注册"])
 async def register_user(user_info: UserModelSchema, db: AsyncSession = Depends(get_db)):
+    # 调用 crud 中的 create_user 方法，创建用户
     add_user, msg = await UserModelCrud.create_user(db=db, user=user_info)
     raise HTTPException(status_code=200, detail=msg)
 
 
-@router.post("/login", tags=["登录"])
+@router.post("/login", tags=["用户登录"])
 async def read_userinfo(user_login_info: UserLoginSchema, db: AsyncSession = Depends(get_db)):
     # 查询数据库是否存在该用户
     select_user, user_info = await UserModelCrud.get_user(db=db, user_account=user_login_info.account)
@@ -38,6 +40,7 @@ async def read_userinfo(user_login_info: UserLoginSchema, db: AsyncSession = Dep
                                 "success": False,
                                 "msg": "密码错误",
                             })
+    # 用户信息
     userinfo = {
         'account': user_info['account'],
         'name': user_info['name'],

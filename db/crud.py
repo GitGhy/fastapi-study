@@ -7,6 +7,7 @@ from .models import UserModel
 from sqlalchemy import select
 
 
+# 用户模型增删改查
 class UserModelCrud:
     # 创建用户
     @staticmethod

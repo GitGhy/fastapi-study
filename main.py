@@ -2,18 +2,20 @@ from fastapi.routing import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from starlette.responses import JSONResponse
-from fastapi import FastAPI, HTTPException
 from pydantic import BaseSettings
+from fastapi import FastAPI
 from api.users import user
 import traceback
 
 
+# 定义包含ORM模式设置的Settings类
 class Settings(BaseSettings):
     orm_mode: bool = True
 
 
+# 实例化Settings类为settings对象
 settings = Settings()
-
+# 创建FastAPI应用程序实例
 app = FastAPI(title="FastAPI",
               description="FastAPI文档",
               version="0.0.1")
@@ -35,6 +37,7 @@ app.add_middleware(
 )
 
 
+# 异常处理器，处理所有异常并返回相应的JSON响应
 @app.exception_handler(Exception)
 async def exception_handler(request, exc):
     response = {
@@ -50,6 +53,7 @@ async def exception_handler(request, exc):
     return JSONResponse(content=response, status_code=500)
 
 
+# 处理请求参数验证异常并返回JSON响应
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
     response = {
@@ -65,9 +69,11 @@ async def validation_exception_handler(request, exc):
     return JSONResponse(content=response, status_code=400)
 
 
+# 注册用户路由
 app.include_router(user.router)
 
 
+# 根路由
 @app.get("/", tags=['Hello World'])
 async def root():
     return {"message": "Hello World"}
