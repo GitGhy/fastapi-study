@@ -5,6 +5,8 @@ from db.database import Base
 
 # unique=True, 唯一，nullable=True可空
 
+
+# 用户表
 class UserModel(Base):
     __tablename__ = "users"
 
