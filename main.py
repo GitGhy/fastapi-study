@@ -2,7 +2,7 @@ from fastapi.routing import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from starlette.responses import JSONResponse
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 from fastapi import FastAPI
 from api.users import user
 import traceback
